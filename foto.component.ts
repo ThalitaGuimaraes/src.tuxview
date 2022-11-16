@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 
+import { Fotos } from './foto';
+
 @Component({
     selector: 'app-foto',
     templateUrl: './foto.component.html',
@@ -12,11 +14,12 @@ nameButton = "Fotos Pares";
 titulo = "Minhas Fotos";
 control = true;
 
-imagens = [];
+imagens: Fotos[] = [];
 
-constructor (private joao: HttpClient) {
-   joao.get('http://localhost:3000/fotos')
+constructor (private http: HttpClient){
+   http.get<Fotos[]>('http://localhost:3000/fotos').subscribe(caixa => this.imagens = caixa)
 }
+
 
   mudar(){
 
@@ -28,5 +31,8 @@ constructor (private joao: HttpClient) {
       this.nameButton = "Todas Imagens";
     }
     }
-  }
-  
+
+    deletar(id:number){
+      this.http.delete('http://localhost:3000/fotos/' + id).subscribe();
+    }
+}
