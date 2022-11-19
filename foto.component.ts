@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 
 import { Fotos } from './foto';
+import { DatabaseService } from '../../service/database.service';
 
 @Component({
     selector: 'app-foto',
@@ -14,25 +15,27 @@ nameButton = "Fotos Pares";
 titulo = "Minhas Fotos";
 control = true;
 
+//Criar um array de objetos para as fotos
 imagens: Fotos[] = [];
 
-constructor (private http: HttpClient){
-   http.get<Fotos[]>('http://localhost:3000/fotos').subscribe(caixa => this.imagens = caixa)
+constructor(private database: DatabaseService){}
+
+ngOnInit(){
+  this.database.getFoto().subscribe(caixa => this.imagens = caixa);
 }
 
+  //Método deletar - Apaga uma foto em nossa web api
+  deletar(id:number){
+   this.database.delFoto(id);
+  }
+;
+    mudar(){
+      this.control = !this.control;
 
-  mudar(){
-
-    this.control = !this.control;
-    
     if(this.nameButton == "Todas Imagens" ){
       this.nameButton = "Fotos Pares"
     }else{
       this.nameButton = "Todas Imagens";
     }
-    }
-
-    deletar(id:number){
-      this.http.delete('http://localhost:3000/fotos/' + id).subscribe();
-    }
+}
 }
